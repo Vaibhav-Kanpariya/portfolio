@@ -36,7 +36,7 @@ export default function RootLayout({
       lang="en"
       className={`${sora.variable} ${dmSans.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full font-dm-sans bg-cream text-charcoal">
+      <body suppressHydrationWarning className="min-h-full font-dm-sans bg-cream text-charcoal overflow-x-hidden">
         {children}
       </body>
     </html>

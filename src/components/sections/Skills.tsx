@@ -8,16 +8,19 @@ import { motion, type Variants } from "framer-motion";
 
 interface Skill {
   name: string;
-  emoji: string;
+  icon: string; // URL to real tech icon
   subtitle: string;
 }
 
 interface SkillGroup {
   label: string;
-  tint: string; // Tailwind bg class for the badge
-  borderTint: string; // border color accent
+  tint: string;
+  borderTint: string;
   skills: Skill[];
 }
+
+// Using devicon CDN for real colored tech logos
+const DI = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
 
 const skillGroups: SkillGroup[] = [
   {
@@ -25,10 +28,10 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-yellow/40",
     borderTint: "border-charcoal",
     skills: [
-      { name: "C++", emoji: "⚡", subtitle: "speed demon" },
-      { name: "Python", emoji: "🐍", subtitle: "scripting beast" },
-      { name: "JavaScript", emoji: "🌐", subtitle: "web native" },
-      { name: "TypeScript", emoji: "🛡️", subtitle: "type safe" },
+      { name: "C++", icon: `${DI}/cplusplus/cplusplus-original.svg`, subtitle: "speed demon" },
+      { name: "Python", icon: `${DI}/python/python-original.svg`, subtitle: "scripting beast" },
+      { name: "JavaScript", icon: `${DI}/javascript/javascript-original.svg`, subtitle: "web native" },
+      { name: "TypeScript", icon: `${DI}/typescript/typescript-original.svg`, subtitle: "type safe" },
     ],
   },
   {
@@ -36,12 +39,12 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-purple/20",
     borderTint: "border-charcoal",
     skills: [
-      { name: "ReactJS", emoji: "⚛️", subtitle: "UI wizard" },
-      { name: "NodeJS", emoji: "🟢", subtitle: "runtime king" },
-      { name: "ExpressJS", emoji: "🚂", subtitle: "route master" },
-      { name: "NextJS", emoji: "▲", subtitle: "full-stack" },
-      { name: "Tailwind", emoji: "🎨", subtitle: "style guru" },
-      { name: "FastAPI", emoji: "🏎️", subtitle: "blazing fast" },
+      { name: "ReactJS", icon: `${DI}/react/react-original.svg`, subtitle: "UI wizard" },
+      { name: "NodeJS", icon: `${DI}/nodejs/nodejs-original.svg`, subtitle: "runtime king" },
+      { name: "ExpressJS", icon: `${DI}/express/express-original.svg`, subtitle: "route master" },
+      { name: "NextJS", icon: `${DI}/nextjs/nextjs-original.svg`, subtitle: "full-stack" },
+      { name: "Tailwind", icon: `${DI}/tailwindcss/tailwindcss-original.svg`, subtitle: "style guru" },
+      { name: "FastAPI", icon: `${DI}/fastapi/fastapi-original.svg`, subtitle: "blazing fast" },
     ],
   },
   {
@@ -49,9 +52,9 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-coral/25",
     borderTint: "border-charcoal",
     skills: [
-      { name: "MySQL", emoji: "🐬", subtitle: "relational OG" },
-      { name: "MongoDB", emoji: "🍃", subtitle: "doc store" },
-      { name: "Firebase", emoji: "🔥", subtitle: "real-time" },
+      { name: "MySQL", icon: `${DI}/mysql/mysql-original.svg`, subtitle: "relational OG" },
+      { name: "MongoDB", icon: `${DI}/mongodb/mongodb-original.svg`, subtitle: "doc store" },
+      { name: "Firebase", icon: `${DI}/firebase/firebase-original.svg`, subtitle: "real-time" },
     ],
   },
   {
@@ -59,9 +62,9 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-sky-300/30",
     borderTint: "border-charcoal",
     skills: [
-      { name: "AWS", emoji: "☁️", subtitle: "SNS SQS SES" },
-      { name: "Kafka", emoji: "📨", subtitle: "event stream" },
-      { name: "Docker", emoji: "🐳", subtitle: "containerized" },
+      { name: "AWS", icon: `${DI}/amazonwebservices/amazonwebservices-original-wordmark.svg`, subtitle: "SNS SQS SES" },
+      { name: "Kafka", icon: `${DI}/apachekafka/apachekafka-original.svg`, subtitle: "event stream" },
+      { name: "Docker", icon: `${DI}/docker/docker-original.svg`, subtitle: "containerized" },
     ],
   },
   {
@@ -69,10 +72,10 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-emerald-300/30",
     borderTint: "border-charcoal",
     skills: [
-      { name: "Git", emoji: "🌿", subtitle: "version ctrl" },
-      { name: "JIRA", emoji: "📋", subtitle: "ticket wrangler" },
-      { name: "Postman", emoji: "📮", subtitle: "API tester" },
-      { name: "VS Code", emoji: "💻", subtitle: "daily driver" },
+      { name: "Git", icon: `${DI}/git/git-original.svg`, subtitle: "version ctrl" },
+      { name: "Jira", icon: `${DI}/jira/jira-original.svg`, subtitle: "ticket wrangler" },
+      { name: "Postman", icon: `${DI}/postman/postman-original.svg`, subtitle: "API tester" },
+      { name: "VS Code", icon: `${DI}/vscode/vscode-original.svg`, subtitle: "daily driver" },
     ],
   },
   {
@@ -80,9 +83,9 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-fuchsia-300/30",
     borderTint: "border-charcoal",
     skills: [
-      { name: "OpenAI", emoji: "🤖", subtitle: "GPT vibes" },
-      { name: "HuggingFace", emoji: "🤗", subtitle: "model hub" },
-      { name: "Ollama", emoji: "🦙", subtitle: "local LLMs" },
+      { name: "OpenAI", icon: "https://cdn.worldvectorlogo.com/logos/openai-2.svg", subtitle: "GPT vibes" },
+      { name: "HuggingFace", icon: "https://huggingface.co/front/assets/huggingface_logo-noborder.svg", subtitle: "model hub" },
+      { name: "Ollama", icon: "https://ollama.com/public/ollama.png", subtitle: "local LLMs" },
     ],
   },
   {
@@ -90,9 +93,9 @@ const skillGroups: SkillGroup[] = [
     tint: "bg-orange-300/30",
     borderTint: "border-charcoal",
     skills: [
-      { name: "Mixpanel", emoji: "📊", subtitle: "event track" },
-      { name: "Google Analytics", emoji: "📈", subtitle: "web stats" },
-      { name: "PostHog", emoji: "🦔", subtitle: "product intel" },
+      { name: "Mixpanel", icon: "https://cdn.worldvectorlogo.com/logos/mixpanel.svg", subtitle: "event track" },
+      { name: "Google Analytics", icon: `${DI}/google/google-original.svg`, subtitle: "web stats" },
+      { name: "PostHog", icon: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/posthog.svg", subtitle: "product intel" },
     ],
   },
 ];
@@ -238,8 +241,13 @@ export default function Skills() {
                     style={{ rotate: `${rotation}deg` }}
                     className={`${group.tint} ${group.borderTint} cursor-default select-none rounded-full border-[3px] px-4 py-2 shadow-brutal transition-colors sm:px-5 sm:py-2.5`}
                   >
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="text-base sm:text-lg">{skill.emoji}</span>
+                    <div className="flex items-center gap-2 sm:gap-2.5">
+                      <img
+                        src={skill.icon}
+                        alt={skill.name}
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
+                        loading="lazy"
+                      />
                       <div className="flex flex-col leading-tight">
                         <span className="font-sora text-xs font-bold text-charcoal sm:text-sm">
                           {skill.name}

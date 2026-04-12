@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
 
 const navLinks = [
   { label: "About", href: "#about", color: "bg-purple text-white" },
@@ -9,49 +10,157 @@ const navLinks = [
   { label: "Experience", href: "#experience", color: "bg-purple text-white" },
 ];
 
+function Logo() {
+  return (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 36 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0"
+    >
+      <rect x="2" y="2" width="32" height="32" rx="10" fill="#6C5CE7" stroke="#2D3436" strokeWidth="3" />
+      <path d="M11 10L18 26L25 10" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <text x="25" y="30" fill="#FDCB6E" fontSize="8" fontWeight="bold" fontFamily="monospace">;</text>
+    </svg>
+  );
+}
+
 export default function Navbar() {
-  const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
-    e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  const scrollTo = useCallback((href: string) => {
+    setIsOpen(false);
+    // Delay scroll slightly so body overflow:hidden gets removed first
+    setTimeout(() => {
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        const yOffset = -60;
+        const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }, 100);
+  }, []);
 
   return (
-    <motion.nav
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
-      className="fixed top-4 left-1/2 z-50 -translate-x-1/2"
-    >
-      <div className="flex items-center gap-2 rounded-full border-[3px] border-charcoal bg-cream/80 backdrop-blur-md px-4 py-2 shadow-brutal sm:gap-4 sm:px-6 sm:py-2.5">
-        {/* Logo / Package name */}
-        <a
-          href="#hero"
-          onClick={(e) => handleClick(e, "#hero")}
-          className="font-sora font-bold text-purple text-sm sm:text-base whitespace-nowrap mr-2 sm:mr-4 hover:scale-105 transition-transform"
-        >
-          vaibhav@latest
-        </a>
+    <>
+      {/* ── Desktop Navbar ── */}
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
+        className="fixed top-4 left-1/2 z-50 -translate-x-1/2 hidden md:block"
+      >
+        <div className="flex items-center gap-4 rounded-full border-[3px] border-charcoal bg-cream/80 backdrop-blur-md px-6 py-2.5 shadow-brutal">
+          <button
+            onClick={() => scrollTo("#hero")}
+            className="flex items-center gap-2 hover:scale-105 transition-transform"
+          >
+            <Logo />
+            <span className="font-sora font-bold text-purple text-base whitespace-nowrap">
+              vaibhav@latest
+            </span>
+          </button>
 
-        {/* Nav links */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleClick(e, link.href)}
-              className={`${link.color} rounded-full border-2 border-charcoal px-2.5 py-1 text-xs font-sora font-semibold transition-all hover:shadow-brutal hover:-translate-y-0.5 sm:px-4 sm:py-1.5 sm:text-sm`}
-            >
-              {link.label}
-            </a>
-          ))}
+          <div className="w-[3px] h-6 bg-charcoal/20 rounded-full" />
+
+          <div className="flex items-center gap-2">
+            {navLinks.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => scrollTo(link.href)}
+                className={`${link.color} rounded-full border-2 border-charcoal px-4 py-1.5 text-sm font-sora font-semibold transition-all hover:shadow-brutal hover:-translate-y-0.5 cursor-pointer`}
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
         </div>
+      </motion.nav>
+
+      {/* ── Mobile Navbar ── */}
+      <div className="fixed top-0 left-0 right-0 z-50 md:hidden">
+        <div className="flex items-center justify-between px-4 pr-6 py-2.5 bg-cream/95 backdrop-blur-md border-b-[3px] border-charcoal">
+          <button onClick={() => scrollTo("#hero")}>
+            <Logo />
+          </button>
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-8 h-8 rounded-lg border-[2px] border-charcoal bg-white flex flex-col items-center justify-center gap-[3px] transition-all"
+            aria-label="Toggle menu"
+          >
+            <motion.span
+              animate={isOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className="block w-3.5 h-[2px] bg-charcoal rounded-full origin-center"
+            />
+            <motion.span
+              animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.15 }}
+              className="block w-3.5 h-[2px] bg-charcoal rounded-full"
+            />
+            <motion.span
+              animate={isOpen ? { rotate: -45, y: -4 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className="block w-3.5 h-[2px] bg-charcoal rounded-full origin-center"
+            />
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {isOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => setIsOpen(false)}
+                className="fixed inset-0 top-[49px] bg-charcoal/20 backdrop-blur-sm z-40"
+              />
+
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="overflow-hidden bg-cream border-b-[3px] border-charcoal z-50 relative"
+              >
+                <div className="flex flex-col gap-2 p-3">
+                  {navLinks.map((link, i) => (
+                    <motion.button
+                      key={link.href}
+                      onClick={() => scrollTo(link.href)}
+                      initial={{ opacity: 0, x: -15 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + i * 0.04, duration: 0.15 }}
+                      className={`${link.color} rounded-lg border-[2px] border-charcoal px-4 py-2.5 text-sm font-sora font-bold text-left shadow-brutal active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer`}
+                    >
+                      {link.label}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
-    </motion.nav>
+    </>
   );
 }
