@@ -10,7 +10,7 @@ const entries = [
     org: "Culturex Entertainment (Influenzer.ai)",
     date: "Aug 2023 — Present",
     description:
-      "Spearheaded 0-to-1 platform, 100K+ daily API requests, 99.8% uptime, 8 major releases",
+      "Spearheaded 0-to-1 platform, 300K+ daily API requests, 99.8% uptime, 8 major releases",
     badges: ["React", "TypeScript", "Node.js", "MySQL", "AWS"],
     statusBadge: "BUILD PASSED",
     accent: "border-purple",
