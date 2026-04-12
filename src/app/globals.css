@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@theme inline {
+  --color-cream: #FFFBF5;
+  --color-purple: #6C5CE7;
+  --color-coral: #FF6B6B;
+  --color-yellow: #FDCB6E;
+  --color-charcoal: #2D3436;
+
+  --font-sora: var(--font-sora);
+  --font-dm-sans: var(--font-dm-sans);
+  --font-space-grotesk: var(--font-space-grotesk);
+
+  --shadow-brutal: 4px 4px 0px 0px #2D3436;
+  --shadow-brutal-lg: 8px 8px 0px 0px #2D3436;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FFFBF5;
+  color: #2D3436;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+}
+
+/* Sticker rotation utility — slight random-looking rotation */
+.sticker-rotate {
+  --rotation: -2deg;
+  transform: rotate(var(--rotation));
+}
+
+.sticker-rotate:nth-child(2n) {
+  --rotation: 1.5deg;
+}
+
+.sticker-rotate:nth-child(3n) {
+  --rotation: -1deg;
+}
+
+.sticker-rotate:nth-child(4n) {
+  --rotation: 2deg;
+}
+
+.sticker-rotate:nth-child(5n) {
+  --rotation: -0.5deg;
+}
+
+.sticker-rotate:nth-child(6n) {
+  --rotation: 1deg;
+}
