@@ -12,18 +12,13 @@ const navLinks = [
 
 function Logo() {
   return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 36 36"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="shrink-0"
-    >
-      <rect x="2" y="2" width="32" height="32" rx="10" fill="#6C5CE7" stroke="#2D3436" strokeWidth="3" />
-      <path d="M11 10L18 26L25 10" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <text x="25" y="30" fill="#FDCB6E" fontSize="8" fontWeight="bold" fontFamily="monospace">;</text>
-    </svg>
+    <img
+      src="/portfoio-logo.png"
+      alt="V"
+      width={36}
+      height={36}
+      className="shrink-0 rounded-lg"
+    />
   );
 }
 

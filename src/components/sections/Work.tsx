@@ -7,10 +7,9 @@ const projects = [
     tag: "influenzer-ai:v2.0",
     accent: "bg-purple",
     accentText: "text-purple",
-    description:
-      "0-to-1 influencer marketing platform serving 100+ users",
+    description: "0-to-1 influencer marketing platform serving 200+ users",
     badges: ["React", "TypeScript", "Node.js", "MySQL"],
-    metric: "100K+ req/day",
+    metric: "300K+ req/day",
   },
   {
     tag: "brand-intelligence:latest",
@@ -18,7 +17,7 @@ const projects = [
     accentText: "text-coral",
     description:
       "AI-powered filtering system for 200M+ influencer database using LLMs",
-    badges: ["Python", "OpenAI", "FastAPI"],
+    badges: ["Agentic Workflow", "OpenAI", "VectorDBs"],
     metric: "92% accuracy",
   },
   {
@@ -104,7 +103,9 @@ export default function Work() {
               </span>
             </p>
             <p className="mt-2 text-yellow">
-              CONTAINER ID &nbsp; IMAGE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS
+              CONTAINER ID &nbsp; IMAGE
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              STATUS
             </p>
             <p className="text-white/70">
               ─────────────────────────────────────────────

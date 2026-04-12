@@ -7,7 +7,11 @@ import { useRef } from "react";
 const terminalLines = [
   { text: "$ vaibhav --shutdown --graceful", color: "text-green-400" },
   { prefix: "[INFO]", prefixColor: "text-blue-400", text: "Saving session..." },
-  { prefix: "[INFO]", prefixColor: "text-blue-400", text: "Flushing caches..." },
+  {
+    prefix: "[INFO]",
+    prefixColor: "text-blue-400",
+    text: "Flushing caches...",
+  },
   {
     prefix: "[INFO]",
     prefixColor: "text-blue-400",
@@ -18,7 +22,11 @@ const terminalLines = [
     prefixColor: "text-amber-400",
     text: "You've reached the end!",
   },
-  { prefix: "[OK]", prefixColor: "text-green-400", text: "Writing final logs..." },
+  {
+    prefix: "[OK]",
+    prefixColor: "text-green-400",
+    text: "Writing final logs...",
+  },
 ] as const;
 
 /* ───── restart buttons ───── */
@@ -32,14 +40,14 @@ const restartButtons = [
   },
   {
     label: "ssh vaibhav@github",
-    href: "#",
+    href: "https://github.com/Vaibhav-Kanpariya",
     bg: "bg-coral",
     text: "text-white",
     external: true,
   },
   {
     label: "traceroute linkedin",
-    href: "#",
+    href: "https://www.linkedin.com/in/vaibhav-kanpariya/",
     bg: "bg-yellow",
     text: "text-charcoal",
     external: true,

@@ -139,13 +139,13 @@ const jsonLines = [
 
 const stats = [
   {
-    number: "2+",
+    number: "3+",
     label: "Years building products",
     bg: "bg-yellow",
     textColor: "text-charcoal",
   },
   {
-    number: "100K+",
+    number: "300K+",
     label: "API requests handled daily",
     bg: "bg-purple",
     textColor: "text-white",
