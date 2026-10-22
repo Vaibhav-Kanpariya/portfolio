@@ -1,35 +1,12 @@
-import Background from "@/components/galaxy/Background";
-import Boot from "@/components/Boot";
-import Commands from "@/components/Commands";
-import Cursor from "@/components/Cursor";
-import TopBar from "@/components/TopBar";
-import RegionNav from "@/components/RegionNav";
-import Intro from "@/components/sections/Intro";
-import Impact from "@/components/sections/Impact";
-import Career from "@/components/sections/Career";
-import Mastermind from "@/components/sections/Mastermind";
-import Ntn from "@/components/sections/Ntn";
-import Skills from "@/components/sections/Skills";
-import Contact from "@/components/sections/Contact";
+import type { Metadata } from "next";
+import WorldPage from "@/world/WorldPage";
+
+export const metadata: Metadata = {
+  title: "Vaibhav Kanpariya | Drive through my work",
+  description:
+    "A small world you drive through. Knock over my name, find the projects, crash into the skills, and park at the mailbox to get in touch.",
+};
 
 export default function Home() {
-  return (
-    <>
-      <Boot />
-      <Background />
-      <TopBar />
-      <Commands />
-      <Cursor />
-      <RegionNav />
-      <main className="pointer-events-none relative z-[2]">
-        <Intro />
-        <Impact />
-        <Career />
-        <Mastermind />
-        <Ntn />
-        <Skills />
-        <Contact />
-      </main>
-    </>
-  );
+  return <WorldPage />;
 }

@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody, useRapier, type RapierRigidBody } from "@react-three/rapier";
-import { RigidBodyType } from "@dimforge/rapier3d-compat";
 import * as THREE from "three";
 import { clusters, regionOrder, skills } from "@/content/portfolio";
 import { galaxy, isChaos, setGalaxy } from "./store";
@@ -19,7 +18,7 @@ const scratchPlane = new THREE.Plane();
 const scratchHit = new THREE.Vector3();
 const scratchDir = new THREE.Vector3();
 
-function labelTexture(label: string, color: string) {
+export function labelTexture(label: string, color: string) {
   const w = 512;
   const h = 256;
   const c = document.createElement("canvas");
@@ -56,6 +55,7 @@ type BlockProps = {
 function Block({ label, color, start, rotation }: BlockProps) {
   const body = useRef<RapierRigidBody>(null);
   const camera = useThree((s) => s.camera);
+  const { rapier } = useRapier();
   const width = Math.min(Math.max(1.5 + label.length * 0.17, 1.9), 3.9);
   const size: [number, number, number] = [width, 1.0, 1.15];
 
@@ -87,7 +87,7 @@ function Block({ label, color, start, rotation }: BlockProps) {
     scratchPlane.setFromNormalAndCoplanarPoint(scratchDir, pos);
     e.ray.intersectPlane(scratchPlane, scratchHit);
     drag.current = { offset: scratchHit.clone().sub(pos), last: pos.clone(), vel: new THREE.Vector3(), t: performance.now() };
-    rb.setBodyType(RigidBodyType.KinematicPositionBased, true);
+    rb.setBodyType(rapier.RigidBodyType.KinematicPositionBased, true);
     setGalaxy({ grabbing: true });
   };
 
@@ -122,7 +122,7 @@ function Block({ label, color, start, rotation }: BlockProps) {
     } catch {
       /* already released */
     }
-    rb.setBodyType(RigidBodyType.Dynamic, true);
+    rb.setBodyType(rapier.RigidBodyType.Dynamic, true);
     const v = d.vel.clampLength(0, 28);
     rb.setLinvel({ x: v.x, y: v.y, z: v.z }, true);
     rb.setAngvel({ x: (Math.random() - 0.5) * 4, y: (Math.random() - 0.5) * 4, z: (Math.random() - 0.5) * 4 }, true);
