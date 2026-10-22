@@ -31,7 +31,7 @@ export default function Career() {
                 {job.orgNote ? `, working on ${job.orgNote}` : ""}. {job.place}
               </p>
               <ul className="mt-6 flex flex-col gap-3">
-                {job.points.map((point) => (
+                {job.points.slice(0, 2).map((point) => (
                   <li key={point} className="relative pl-5 text-starlight/90">
                     <span aria-hidden="true" className="absolute left-0 top-[0.72em] h-px w-2.5 bg-faint" />
                     {point}

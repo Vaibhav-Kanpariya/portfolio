@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import ScrollDriver from "./ScrollDriver";
+import { setGalaxy } from "./store";
 
 const GalaxyCanvas = dynamic(() => import("./GalaxyCanvas"), { ssr: false });
 
@@ -25,8 +26,10 @@ export default function Background() {
 
   useEffect(() => {
     // Feature detection has to run in the browser, after hydration.
+    const ok = hasWebGL();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setWebgl(hasWebGL());
+    setWebgl(ok);
+    setGalaxy({ webgl: ok });
     const t = window.setTimeout(() => setReady(true), 60);
     return () => window.clearTimeout(t);
   }, []);
@@ -48,7 +51,7 @@ export default function Background() {
       {/* Scrim: solid behind the text column on wide screens, a wash on phones */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-[1] bg-[linear-gradient(180deg,rgba(6,10,24,0.55)_0%,rgba(6,10,24,0.8)_100%)] min-[960px]:bg-[linear-gradient(90deg,rgba(6,10,24,0.92)_0%,rgba(6,10,24,0.78)_30%,rgba(6,10,24,0)_56%)]"
+        className="pointer-events-none fixed inset-0 z-[1] bg-[linear-gradient(180deg,rgba(6,10,24,0.2)_0%,rgba(6,10,24,0.35)_40%,rgba(6,10,24,0.88)_100%)] min-[960px]:bg-[linear-gradient(90deg,rgba(6,10,24,0.92)_0%,rgba(6,10,24,0.78)_30%,rgba(6,10,24,0)_56%)]"
       />
       {/* Quiet strip behind the section nav so star labels don't collide with it */}
       <div

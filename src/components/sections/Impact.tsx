@@ -1,5 +1,6 @@
 import { impact } from "@/content/portfolio";
 import Region from "./Region";
+import CountUp from "@/components/CountUp";
 
 export default function Impact() {
   return (
@@ -32,7 +33,7 @@ export function FigureList({
           key={item.value}
           className="grid gap-1.5 min-[520px]:col-span-2 min-[520px]:grid-cols-subgrid min-[520px]:items-baseline"
         >
-          <span className="t-figure whitespace-nowrap text-starlight">{item.value}</span>
+          <CountUp value={item.value} className="t-figure whitespace-nowrap tabular-nums text-starlight" />
           <span className="text-dust">{item.text}</span>
         </li>
       ))}

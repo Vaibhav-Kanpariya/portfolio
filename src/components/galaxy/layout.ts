@@ -227,7 +227,7 @@ export function buildRegions(): Record<RegionId, RegionView> {
     camera: [4, 17, 37],
     target: [0, -1.5, 0],
     focus: [],
-    showClusterLabels: true,
+    showClusterLabels: false,
   };
 
   const impactFocus = ["culturex", "influenzer", "analytics", "mixpanel", "posthog", "ga", "node", "mysql"];
@@ -238,15 +238,16 @@ export function buildRegions(): Record<RegionId, RegionView> {
     r[id] = { id, ...orbitView([j.id], 12, 0.55), focus: [j.id, ...j.links] };
   }
 
-  r.mastermind = { id: "mastermind", ...orbitView(["mastermind"], 13, 0.4), focus: withNeighbours("mastermind") };
-  r.ntn = { id: "ntn", ...orbitView(["ntn"], 12, 0.45), focus: withNeighbours("ntn") };
+  r.mastermind = { id: "mastermind", ...orbitView(["mastermind"], 16, 0.3), focus: withNeighbours("mastermind") };
+  r.ntn = { id: "ntn", ...orbitView(["ntn"], 14, 0.2), focus: withNeighbours("ntn") };
 
+  // the skills pile sits on a tray far below the disk; the camera dives to it
   r.skills = {
     id: "skills",
-    camera: [0, 46, 26],
-    target: [0, 0, 0],
+    camera: [1, -14.5, 16.5],
+    target: [1.5, -20.6, 0],
     focus: [],
-    showAllSkillLabels: true,
+    showAllSkillLabels: false,
     showClusterLabels: false,
   };
 

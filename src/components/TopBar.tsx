@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { profile } from "@/content/portfolio";
+import { CommandHint } from "./Commands";
 
 export default function TopBar() {
   return (
@@ -12,9 +13,12 @@ export default function TopBar() {
         >
           VK
         </a>
-        <Link href="/resume" className="btn btn-quiet pointer-events-auto bg-void/60 backdrop-blur-sm">
-          Recruiter view
-        </Link>
+        <div className="pointer-events-auto flex items-center gap-2">
+          <CommandHint />
+          <Link href="/resume" className="btn btn-quiet bg-void/60 backdrop-blur-sm">
+            Recruiter view
+          </Link>
+        </div>
       </div>
     </header>
   );

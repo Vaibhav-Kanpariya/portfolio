@@ -6,27 +6,10 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { clusters, type ClusterId } from "@/content/portfolio";
 import { clusterCenters, graph, neighbours, regions, type GalaxyNode } from "./layout";
-import { galaxy, setGalaxy, useGalaxy } from "./store";
+import { galaxy, isChaos, setGalaxy, useGalaxy } from "./store";
 import { scrollToId } from "./scroll";
-
-/* ───────── shared glow texture ───────── */
-function makeGlowTexture() {
-  const size = 128;
-  const c = document.createElement("canvas");
-  c.width = c.height = size;
-  const ctx = c.getContext("2d")!;
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, "rgba(255,255,255,1)");
-  g.addColorStop(0.12, "rgba(255,255,255,0.95)");
-  g.addColorStop(0.28, "rgba(255,255,255,0.35)");
-  g.addColorStop(0.6, "rgba(255,255,255,0.08)");
-  g.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, size, size);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
+import { storyWeight } from "./story";
+import { glowTexture } from "./glow";
 
 /* ───────── which stars are lit right now ───────── */
 const neighbourCache = new Map<string, Set<string>>();
@@ -50,18 +33,28 @@ function litSet(): Set<string> | null {
 }
 
 /* ───────── one star ───────── */
+const nearTmp = new THREE.Vector3();
+
 function Star({ node, texture }: { node: GalaxyNode; texture: THREE.Texture }) {
   const core = useRef<THREE.Sprite>(null);
   const halo = useRef<THREE.Sprite>(null);
   const base = node.size * 2.4;
   const isBig = node.kind !== "skill";
 
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     const lit = litSet();
     const on = !lit || lit.has(node.id);
     const isHover = galaxy.hovered === node.id || galaxy.selected === node.id;
     const targetScale = base * (isHover ? 1.7 : lit && on ? 1.25 : 1);
-    const targetOpacity = on ? 1 : 0.28;
+    // stars stay quiet behind the name until it scatters, and a star steps
+    // aside while its own set piece plays
+    let hero = 0.18 + 0.82 * galaxy.heroMorph;
+    if (node.id === "mastermind") hero *= 1 - storyWeight("mastermind");
+    if (node.id === "ntn") hero *= 1 - storyWeight("ntn");
+    // a star right in front of the lens would be a blurry blob; fade it out
+    const d = camera.position.distanceTo(core.current?.getWorldPosition(nearTmp) ?? nearTmp);
+    hero *= THREE.MathUtils.smoothstep(d, 3, 9);
+    const targetOpacity = (on ? 1 : 0.28) * hero;
     const k = 1 - Math.exp(-delta * 6);
     if (core.current) {
       const s = THREE.MathUtils.lerp(core.current.scale.x, targetScale, k);
@@ -71,7 +64,7 @@ function Star({ node, texture }: { node: GalaxyNode; texture: THREE.Texture }) {
     }
     if (halo.current) {
       const m = halo.current.material as THREE.SpriteMaterial;
-      m.opacity = THREE.MathUtils.lerp(m.opacity, on ? 0.14 : 0.04, k);
+      m.opacity = THREE.MathUtils.lerp(m.opacity, (on ? 0.14 : 0.04) * hero, k);
     }
   });
 
@@ -133,7 +126,11 @@ function Labels() {
   return (
     <>
       {graph.nodes.map((n) => {
-        const show = visible.has(n.id) || (view.showAllSkillLabels && n.kind === "skill");
+        // a set piece replaces its own star, so that label steps aside too
+        const inStory =
+          (region === "mastermind" && (n.id === "mastermind" || n.id === "agents")) ||
+          (region === "ntn" && (n.id === "ntn" || n.id === "agents"));
+        const show = !inStory && (visible.has(n.id) || (view.showAllSkillLabels && n.kind === "skill"));
         const strong = n.id === pick || (n.kind !== "skill" && show);
         return (
           <Html
@@ -239,6 +236,7 @@ function Edges() {
     const pick = galaxy.hovered ?? galaxy.selected;
     const view = regions[galaxy.region];
     const k = 1 - Math.exp(-delta * 5);
+    const hero = 0.15 + 0.85 * galaxy.heroMorph;
     const arr = alpha.array as Float32Array;
     graph.edges.forEach((e, i) => {
       const a = graph.nodes[e.a].id;
@@ -247,7 +245,7 @@ function Edges() {
       if (view.showAllSkillLabels && e.kind === "uses") t = 0.12;
       if (lit && lit.has(a) && lit.has(b)) t = 0.5;
       if (pick && (a === pick || b === pick)) t = 0.85;
-      const v = THREE.MathUtils.lerp(arr[i * 2], t, k);
+      const v = THREE.MathUtils.lerp(arr[i * 2], t * hero, k);
       arr[i * 2] = v;
       arr[i * 2 + 1] = v;
     });
@@ -334,7 +332,7 @@ function Packets() {
       const a = graph.nodes[edge.a].position;
       const b = graph.nodes[edge.b].position;
       const phase = (i * 0.61803) % 1;
-      const f = (t * 0.32 + phase) % 1;
+      const f = (t * (isChaos() ? 2.2 : 0.32) + phase) % 1;
       p[i * 3] = a[0] + (b[0] - a[0]) * f;
       p[i * 3 + 1] = a[1] + (b[1] - a[1]) * f;
       p[i * 3 + 2] = a[2] + (b[2] - a[2]) * f;
@@ -357,7 +355,7 @@ function Core({ texture }: { texture: THREE.Texture }) {
     if (!ref.current) return;
     const d = camera.position.length();
     const m = ref.current.material as THREE.SpriteMaterial;
-    m.opacity = THREE.MathUtils.clamp((d - 14) / 40, 0.08, 0.5);
+    m.opacity = THREE.MathUtils.clamp((d - 14) / 40, 0.08, 0.5) * (0.3 + 0.7 * galaxy.heroMorph);
   });
   return (
     <sprite ref={ref} scale={13}>
@@ -367,7 +365,7 @@ function Core({ texture }: { texture: THREE.Texture }) {
 }
 
 export default function Constellation() {
-  const texture = useMemo(() => makeGlowTexture(), []);
+  const texture = useMemo(() => glowTexture(), []);
   return (
     <group>
       <Core texture={texture} />

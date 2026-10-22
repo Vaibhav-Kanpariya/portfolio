@@ -39,7 +39,8 @@ export default function CameraRig() {
   useEffect(() => {
     const { width, height } = size;
     if (width >= 960) camera.setViewOffset(width, height, -width * 0.13, 0, width, height);
-    else camera.clearViewOffset();
+    // on phones the copy sits at the bottom, so lift the scene into the upper half
+    else camera.setViewOffset(width, height, 0, height * 0.16, width, height);
     camera.updateProjectionMatrix();
   }, [camera, size]);
 
@@ -54,8 +55,10 @@ export default function CameraRig() {
     desiredLook.current.lerpVectors(targets[i], targets[i + 1], e);
 
     if (!galaxy.reducedMotion) {
-      desired.current.x += galaxy.pointer.x * 1.4;
-      desired.current.y += galaxy.pointer.y * 0.9;
+      const px = THREE.MathUtils.clamp(galaxy.pointer.x, -1, 1);
+      const py = THREE.MathUtils.clamp(galaxy.pointer.y, -1, 1);
+      desired.current.x += px * 1.4;
+      desired.current.y += py * 0.9;
     }
 
     const k = first.current || galaxy.reducedMotion ? 1 : 1 - Math.exp(-delta * 2.4);

@@ -47,8 +47,23 @@ export default function ScrollDriver() {
       });
     };
 
+    // Elements whose own scroll progress drives a 3D story.
+    let stories: { id: RegionId; el: HTMLElement }[] = [];
+    const findStories = () => {
+      stories = Array.from(document.querySelectorAll<HTMLElement>("[data-story]")).map((el) => ({
+        id: el.dataset.region as RegionId,
+        el,
+      }));
+    };
+
+    // In a story region the camera holds for the first part of the scroll
+    // while the set piece plays, then travels on in the remainder.
+    const STORY_HOLD = 0.62;
+    const storyIds = () => new Set(stories.map((s) => s.id));
+
     const update = () => {
       const y = window.scrollY;
+      const isStory = storyIds();
       let stop = 0;
       for (let i = 0; i < keys.length - 1; i++) {
         const a = keys[i];
@@ -57,25 +72,47 @@ export default function ScrollDriver() {
           stop = i + 1;
           continue;
         }
-        if (y > a) stop = i + (y - a) / (b - a);
+        if (y > a) {
+          let f = (y - a) / (b - a);
+          const id = regionOrder[i];
+          if (isStory.has(id)) {
+            galaxy.progress[id] = Math.min(f / STORY_HOLD, 1);
+            f = Math.max(0, (f - STORY_HOLD) / (1 - STORY_HOLD));
+          }
+          stop = i + f;
+        }
         break;
       }
+      // stories not currently being scrolled are at 0 (before) or 1 (after)
+      stories.forEach((s) => {
+        const i = regionOrder.indexOf(s.id);
+        if (stop <= i - 0.001) galaxy.progress[s.id] = 0;
+        else if (stop >= i + 0.001) galaxy.progress[s.id] = 1;
+      });
       galaxy.stop = stop;
       const active = regionOrder[Math.min(Math.round(stop - 0.2), regionOrder.length - 1)] as RegionId;
       setGalaxy({ region: active ?? "intro" });
     };
 
+    findStories();
     measure();
     update();
 
     const onResize = () => {
+      findStories();
       measure();
       update();
     };
+    galaxy.pointer.x = 0;
+    galaxy.pointer.y = -4; // off-screen until the pointer moves
     const onPointer = (e: PointerEvent) => {
       galaxy.pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
       galaxy.pointer.y = -((e.clientY / window.innerHeight) * 2 - 1);
     };
+    const onLeave = () => {
+      galaxy.pointer.y = -4;
+    };
+    document.addEventListener("pointerleave", onLeave);
 
     // Content can change height after fonts load; re-measure then.
     const ro = new ResizeObserver(onResize);
@@ -90,6 +127,7 @@ export default function ScrollDriver() {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
+      document.removeEventListener("pointerleave", onLeave);
       ro.disconnect();
       stopLenis();
     };
