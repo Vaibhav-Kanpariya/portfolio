@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vaibhav Kanpariya: portfolio v2 (3D)
 
-## Getting Started
+My work as an embedding-space galaxy. Every skill, project and job is a star, placed near the things it relates to. Scrolling flies the camera between sections; hovering a star or a skill name lights up what it connects to. A plain one-page recruiter view lives at `/resume`.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things are
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | Where |
+| --- | --- |
+| All copy, metrics, jobs, projects, skills | `src/content/portfolio.ts` |
+| Star positions, links, camera stops | `src/components/galaxy/layout.ts` |
+| 3D scene (dust, stars, links, packets) | `src/components/galaxy/` |
+| Page sections | `src/components/sections/` |
+| Recruiter view | `src/app/resume/page.tsx` |
+| Design tokens and type roles | `src/app/globals.css` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To add a project, add it to `projects` in `portfolio.ts` with the skill ids it `uses`. Its star is placed automatically between those skills.
 
-## Learn More
+## Stack
 
-To learn more about Next.js, take a look at the following resources:
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, React Three Fiber + Drei, custom GLSL shaders, Lenis smooth scrolling.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Accessibility and fallbacks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `prefers-reduced-motion`: no smooth scrolling, no twinkle or packets, and the camera cuts between views instead of flying.
+- No WebGL: the page shows a still gradient behind the same content.
+- All content is real HTML; the canvas is decorative (`aria-hidden`).
 
-## Deploy on Vercel
+## Branches
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Each version of the portfolio lives on its own branch and is deployed from there. `main` holds v1.

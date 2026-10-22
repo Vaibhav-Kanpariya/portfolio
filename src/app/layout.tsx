@@ -1,29 +1,22 @@
-import type { Metadata } from "next";
-import { Sora, DM_Sans, Space_Grotesk } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-sora",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Self-hosted variable Archivo (weight 100–900, width 62–125%).
+// Self-hosting keeps builds independent of Google Fonts being reachable.
+const archivo = localFont({
+  src: "../fonts/archivo-latin-wdth-normal.woff2",
+  weight: "100 900",
+  style: "normal",
+  display: "swap",
+  variable: "--font-archivo",
+  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
 });
 
 export const metadata: Metadata = {
-  title: "Vaibhav Kanpariya — Backend Engineer",
+  title: "Vaibhav Kanpariya | Full stack engineer, agentic systems",
   description:
-    "Portfolio of Vaibhav Kanpariya — a backend engineer who builds robust, scalable systems. Explore projects, skills, and experience.",
+    "I build autonomous AI agents and the event-driven backends that keep them reliable in production. Explore my work as a 3D map, or open the recruiter view.",
   icons: {
     icon: [
       { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
@@ -33,19 +26,18 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#060a18",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${sora.variable} ${dmSans.variable} ${spaceGrotesk.variable} h-full antialiased`}
-    >
-      <body suppressHydrationWarning className="min-h-full font-dm-sans bg-cream text-charcoal overflow-x-hidden">
-        {children}
-      </body>
+    <html lang="en" className={`${archivo.variable} antialiased`}>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

@@ -1,21 +1,29 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
+import Background from "@/components/galaxy/Background";
+import TopBar from "@/components/TopBar";
+import RegionNav from "@/components/RegionNav";
+import Intro from "@/components/sections/Intro";
+import Impact from "@/components/sections/Impact";
+import Career from "@/components/sections/Career";
+import Mastermind from "@/components/sections/Mastermind";
+import Ntn from "@/components/sections/Ntn";
 import Skills from "@/components/sections/Skills";
-import Work from "@/components/sections/Work";
-import Experience from "@/components/sections/Experience";
-import Ending from "@/components/sections/Ending";
+import Contact from "@/components/sections/Contact";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Work />
-      <Experience />
-      <Ending />
+      <Background />
+      <TopBar />
+      <RegionNav />
+      <main className="pointer-events-none relative z-[2]">
+        <Intro />
+        <Impact />
+        <Career />
+        <Mastermind />
+        <Ntn />
+        <Skills />
+        <Contact />
+      </main>
     </>
   );
 }
